@@ -1,4 +1,7 @@
+
+# witaj w mojej grze
 import random
+
 opcie = ["papier","kamień","nozyce"]
 # milej gry
 while True:
