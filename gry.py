@@ -1,6 +1,6 @@
 import random
 opcie = ["papier","kamień","nozyce"]
-
+# milej gry
 while True:
     gracz = input("wybierz kamień papier lub nożyce (albo napisz koniec)")
 
