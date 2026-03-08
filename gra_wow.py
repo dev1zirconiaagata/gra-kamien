@@ -201,7 +201,7 @@ def animacja_wybuchu():
         time.sleep(0.25)
 
 
-def pokaz_walke(gracz_art, komputer_art, kolor_gracz, kolor_komp):
+def pokaz_walke(gracz_art, komputer_art, kolor_gracz, kolor_komp, imie="Gracz"):
     """Pokazuje zderzenie dwóch broni"""
     gracz_linie = gracz_art.strip().split('\n')
     komp_linie = komputer_art.strip().split('\n')
@@ -213,7 +213,7 @@ def pokaz_walke(gracz_art, komputer_art, kolor_gracz, kolor_komp):
     while len(komp_linie) < max_linie:
         komp_linie.append("")
 
-    print(f"\n  {kolor_gracz}{Kolor.BOLD}>>> TY <<<{Kolor.RESET}"
+    print(f"\n  {kolor_gracz}{Kolor.BOLD}>>> {imie} <<<{Kolor.RESET}"
           f"                    {kolor_komp}{Kolor.BOLD}>>> KOMPUTER <<<{Kolor.RESET}\n")
 
     for g, k in zip(gracz_linie, komp_linie):
@@ -260,13 +260,14 @@ def animacja_remisu():
 {Kolor.RESET}""")
 
 
-def animacja_wygranej():
+def animacja_wygranej(imie="Gracz"):
     """Animacja wygranej gracza"""
+    naglowek = f"🏆  {imie} WYGRYWA!! 🏆"
     print(f"""
 {Kolor.ZIELONY}{Kolor.BOLD}
     ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★
     ☆                               ☆
-    ★    🏆  W Y G R A Ł E Ś !! 🏆   ★
+    ★  {naglowek:^31} ★
     ☆                               ☆
     ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★ ☆ ★
 {Kolor.RESET}""")
@@ -282,34 +283,34 @@ def animacja_wygranej():
     print()
 
 
-def animacja_przegranej():
+def animacja_przegranej(imie="Gracz"):
     """Animacja przegranej gracza"""
     print(f"""
 {Kolor.CZERWONY}{Kolor.BOLD}
     ╔═══════════════════════════════════╗
     ║                                   ║
     ║   🤖 Komputer wygrywa! 🤖        ║
-    ║   Nie poddawaj się!               ║
+    ║   {imie}, nie poddawaj się! 💪     ║
     ║                                   ║
     ╚═══════════════════════════════════╝
 {Kolor.RESET}""")
 
 
-def pokaz_wynik(gracz_pkt, komputer_pkt, rundy):
+def pokaz_wynik(gracz_pkt, komputer_pkt, rundy, imie="Gracz"):
     """Pokazuje aktualny wynik w ładnej ramce"""
-    szerokosc = 45
     procent_g = int((gracz_pkt / max(rundy, 1)) * 100)
     procent_k = int((komputer_pkt / max(rundy, 1)) * 100)
 
     pasek_g = "█" * (procent_g // 5) + "░" * (20 - procent_g // 5)
     pasek_k = "█" * (procent_k // 5) + "░" * (20 - procent_k // 5)
 
+    etykieta = f"🧑 {imie}:"
     print(f"""
 {Kolor.CYAN}╔═════════════════════════════════════════════╗
 ║{Kolor.BOLD}           📊 TABLICA WYNIKÓW 📊             {Kolor.RESET}{Kolor.CYAN}║
 ╠═════════════════════════════════════════════╣
 ║                                             ║
-║  {Kolor.ZIELONY}🧑 Ty:       {gracz_pkt:>3} pkt  [{pasek_g}]{Kolor.CYAN}  ║
+║  {Kolor.ZIELONY}{etykieta:<13}{gracz_pkt:>3} pkt  [{pasek_g}]{Kolor.CYAN}  ║
 ║  {Kolor.CZERWONY}🤖 Komputer: {komputer_pkt:>3} pkt  [{pasek_k}]{Kolor.CYAN}  ║
 ║                                             ║
 ║  {Kolor.ZOLTY}Rozegrane rundy: {rundy}{Kolor.CYAN}                        ║
@@ -372,36 +373,57 @@ def pokaz_opis_wygranej(gracz, komputer, wynik):
         print(f"\n  {Kolor.CZERWONY}{Kolor.BOLD}{opis}{Kolor.RESET}")
 
 
-def pokaz_podsumowanie(gracz_pkt, komputer_pkt, rundy):
+def pokaz_podsumowanie(gracz_pkt, komputer_pkt, rundy, imie="Gracz"):
     """Pokazuje końcowe podsumowanie gry"""
     wyczysc_ekran()
+
+    remisy = rundy - gracz_pkt - komputer_pkt
 
     print(f"""
 {Kolor.CYAN}{Kolor.BOLD}
 ╔══════════════════════════════════════════════════╗
 ║                                                  ║
-║          📋 PODSUMOWANIE GRY 📋                 ║
+║     📋 PODSUMOWANIE GRY - {imie:^12}  📋      ║
 ║                                                  ║
 ╠══════════════════════════════════════════════════╣
 ║                                                  ║
 ║   Rozegrane rundy:    {rundy:>3}                       ║
-║   Twoje wygrane:      {gracz_pkt:>3}  🏆                    ║
+║   Wygrane {imie + ":":<12}  {gracz_pkt:>3}  🏆                    ║
 ║   Wygrane komputera:  {komputer_pkt:>3}  🤖                    ║
-║   Remisy:             {rundy - gracz_pkt - komputer_pkt:>3}  ⚖️                     ║
+║   Remisy:             {remisy:>3}  ⚖️                     ║
 ║                                                  ║""")
 
     if gracz_pkt > komputer_pkt:
         print(f"""║                                                  ║
-║    🎉🏆 JESTEŚ MISTRZEM! GRATULACJE! 🏆🎉       ║
+║  🎉🏆 Dobra robota {imie}! MISTRZOSTWO! 🏆🎉     ║
+║                                                  ║""")
+        # Tytuł na podstawie wyniku
+        if gracz_pkt >= 10:
+            tytul = "LEGENDA ARENY"
+        elif gracz_pkt >= 7:
+            tytul = "MISTRZ WALKI"
+        elif gracz_pkt >= 5:
+            tytul = "WOJOWNIK"
+        elif gracz_pkt >= 3:
+            tytul = "GLADIATOR"
+        else:
+            tytul = "ZWYCIĘZCA"
+        print(f"""║  ⭐ Twój tytuł: {tytul:^20}  ⭐      ║
 ║                                                  ║""")
     elif komputer_pkt > gracz_pkt:
         print(f"""║                                                  ║
-║    🤖 Komputer tym razem lepszy...                ║
-║    💪 Ale następnym razem dasz radę!              ║
+║  🤖 Komputer tym razem lepszy...                 ║
+║  💪 Ale {imie}, następnym razem dasz radę!        ║
 ║                                                  ║""")
     else:
         print(f"""║                                                  ║
-║    ⚖️  Idealny remis! Równe siły!                 ║
+║  ⚖️  Idealny remis! {imie}, równe siły!            ║
+║                                                  ║""")
+
+    # Statystyki procentowe
+    if rundy > 0:
+        procent = int((gracz_pkt / rundy) * 100)
+        print(f"""║  📈 Skuteczność: {procent}%                            ║
 ║                                                  ║""")
 
     print(f"""╚══════════════════════════════════════════════════╝
@@ -424,6 +446,15 @@ def main():
     print(f"{Kolor.CYAN}{Kolor.BOLD}{LOGO}{Kolor.RESET}")
     time.sleep(1)
     pisz_powoli(f"  {Kolor.ZOLTY}Witaj w najlepszej grze w terminalu!{Kolor.RESET}", 0.04)
+    print()
+    imie = input(f"  {Kolor.BOLD}{Kolor.CYAN}✏️  Jak masz na imię? ➤ {Kolor.RESET}").strip()
+    if not imie:
+        imie = "Gracz"
+    print()
+    WYGRANE_DO_ZWYCIESTWA = 3
+
+    pisz_powoli(f"  {Kolor.ZIELONY}{Kolor.BOLD}Cześć {imie}! Przygotuj się do walki! 💪{Kolor.RESET}", 0.04)
+    pisz_powoli(f"  {Kolor.ZOLTY}Gra toczy się do {WYGRANE_DO_ZWYCIESTWA} zwycięstw!{Kolor.RESET}", 0.04)
     pisz_powoli(f"  {Kolor.DIM}Naciśnij ENTER aby rozpocząć...{Kolor.RESET}", 0.03)
     input()
 
@@ -432,7 +463,8 @@ def main():
 
         # Pokaż wynik jeśli to nie pierwsza runda
         if rundy > 0:
-            pokaz_wynik(gracz_pkt, komputer_pkt, rundy)
+            pokaz_wynik(gracz_pkt, komputer_pkt, rundy, imie)
+            print(f"  {Kolor.ZOLTY}Do zwycięstwa: {imie} {WYGRANE_DO_ZWYCIESTWA - gracz_pkt} | Komputer {WYGRANE_DO_ZWYCIESTWA - komputer_pkt}{Kolor.RESET}\n")
 
         # Menu wyboru
         pokaz_menu()
@@ -449,12 +481,12 @@ def main():
         gracz = mapa.get(wybor.lower(), None)
 
         if gracz == "koniec":
-            pokaz_podsumowanie(gracz_pkt, komputer_pkt, rundy)
-            pisz_powoli(f"  {Kolor.CYAN}Dzięki za grę! Do zobaczenia! 👋{Kolor.RESET}", 0.04)
+            pokaz_podsumowanie(gracz_pkt, komputer_pkt, rundy, imie)
+            pisz_powoli(f"  {Kolor.CYAN}Dzięki za grę {imie}! Do zobaczenia! 👋{Kolor.RESET}", 0.04)
             break
 
         if gracz is None:
-            print(f"\n  {Kolor.CZERWONY}❌ Nie rozumiem! Wybierz 1, 2, 3 lub 0{Kolor.RESET}")
+            print(f"\n  {Kolor.CZERWONY}❌ Nie rozumiem! Wybierz 1, 2, 3{Kolor.RESET}")
             time.sleep(1.5)
             continue
 
@@ -471,7 +503,7 @@ def main():
         komp_art = pobierz_art(komputer)
 
         print(f"\n{Kolor.BOLD}  {pobierz_nazwe(gracz)}   vs   {pobierz_nazwe(komputer)}{Kolor.RESET}")
-        pokaz_walke(gracz_art, komp_art, Kolor.ZIELONY, Kolor.CZERWONY)
+        pokaz_walke(gracz_art, komp_art, Kolor.ZIELONY, Kolor.CZERWONY, imie)
 
         time.sleep(0.5)
 
@@ -489,13 +521,28 @@ def main():
             animacja_remisu()
         elif wynik == "gracz":
             gracz_pkt += 1
-            animacja_wygranej()
+            animacja_wygranej(imie)
         else:
             komputer_pkt += 1
-            animacja_przegranej()
+            animacja_przegranej(imie)
 
         # Pokaż aktualny wynik
-        pokaz_wynik(gracz_pkt, komputer_pkt, rundy)
+        pokaz_wynik(gracz_pkt, komputer_pkt, rundy, imie)
+
+        # Sprawdź czy ktoś wygrał 3 razy
+        if gracz_pkt >= WYGRANE_DO_ZWYCIESTWA:
+            print(f"  {Kolor.ZIELONY}{Kolor.BOLD}🎉🎉🎉 Dobra robota {imie}! Wygrywasz całą grę! 🎉🎉🎉{Kolor.RESET}\n")
+            input(f"  {Kolor.DIM}Naciśnij ENTER aby zobaczyć podsumowanie...{Kolor.RESET}")
+            pokaz_podsumowanie(gracz_pkt, komputer_pkt, rundy, imie)
+            pisz_powoli(f"  {Kolor.CYAN}Dzięki za grę {imie}! Do zobaczenia! 👋{Kolor.RESET}", 0.04)
+            break
+
+        if komputer_pkt >= WYGRANE_DO_ZWYCIESTWA:
+            print(f"  {Kolor.CZERWONY}{Kolor.BOLD}🤖 Komputer zdobywa {WYGRANE_DO_ZWYCIESTWA} zwycięstwa!{Kolor.RESET}\n")
+            input(f"  {Kolor.DIM}Naciśnij ENTER aby zobaczyć podsumowanie...{Kolor.RESET}")
+            pokaz_podsumowanie(gracz_pkt, komputer_pkt, rundy, imie)
+            pisz_powoli(f"  {Kolor.CYAN}Dzięki za grę {imie}! Do zobaczenia! 👋{Kolor.RESET}", 0.04)
+            break
 
         input(f"  {Kolor.DIM}Naciśnij ENTER aby kontynuować...{Kolor.RESET}")
 
