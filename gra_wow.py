@@ -451,7 +451,10 @@ def main():
     if not imie:
         imie = "Gracz"
     print()
+    WYGRANE_DO_ZWYCIESTWA = 3
+
     pisz_powoli(f"  {Kolor.ZIELONY}{Kolor.BOLD}Cześć {imie}! Przygotuj się do walki! 💪{Kolor.RESET}", 0.04)
+    pisz_powoli(f"  {Kolor.ZOLTY}Gra toczy się do {WYGRANE_DO_ZWYCIESTWA} zwycięstw!{Kolor.RESET}", 0.04)
     pisz_powoli(f"  {Kolor.DIM}Naciśnij ENTER aby rozpocząć...{Kolor.RESET}", 0.03)
     input()
 
@@ -461,6 +464,7 @@ def main():
         # Pokaż wynik jeśli to nie pierwsza runda
         if rundy > 0:
             pokaz_wynik(gracz_pkt, komputer_pkt, rundy, imie)
+            print(f"  {Kolor.ZOLTY}Do zwycięstwa: {imie} {WYGRANE_DO_ZWYCIESTWA - gracz_pkt} | Komputer {WYGRANE_DO_ZWYCIESTWA - komputer_pkt}{Kolor.RESET}\n")
 
         # Menu wyboru
         pokaz_menu()
@@ -482,7 +486,7 @@ def main():
             break
 
         if gracz is None:
-            print(f"\n  {Kolor.CZERWONY}❌ Nie rozumiem! Wybierz 1, 2, 3 lub 0{Kolor.RESET}")
+            print(f"\n  {Kolor.CZERWONY}❌ Nie rozumiem! Wybierz 1, 2, 3{Kolor.RESET}")
             time.sleep(1.5)
             continue
 
@@ -524,6 +528,21 @@ def main():
 
         # Pokaż aktualny wynik
         pokaz_wynik(gracz_pkt, komputer_pkt, rundy, imie)
+
+        # Sprawdź czy ktoś wygrał 3 razy
+        if gracz_pkt >= WYGRANE_DO_ZWYCIESTWA:
+            print(f"  {Kolor.ZIELONY}{Kolor.BOLD}🎉🎉🎉 Dobra robota {imie}! Wygrywasz całą grę! 🎉🎉🎉{Kolor.RESET}\n")
+            input(f"  {Kolor.DIM}Naciśnij ENTER aby zobaczyć podsumowanie...{Kolor.RESET}")
+            pokaz_podsumowanie(gracz_pkt, komputer_pkt, rundy, imie)
+            pisz_powoli(f"  {Kolor.CYAN}Dzięki za grę {imie}! Do zobaczenia! 👋{Kolor.RESET}", 0.04)
+            break
+
+        if komputer_pkt >= WYGRANE_DO_ZWYCIESTWA:
+            print(f"  {Kolor.CZERWONY}{Kolor.BOLD}🤖 Komputer zdobywa {WYGRANE_DO_ZWYCIESTWA} zwycięstwa!{Kolor.RESET}\n")
+            input(f"  {Kolor.DIM}Naciśnij ENTER aby zobaczyć podsumowanie...{Kolor.RESET}")
+            pokaz_podsumowanie(gracz_pkt, komputer_pkt, rundy, imie)
+            pisz_powoli(f"  {Kolor.CYAN}Dzięki za grę {imie}! Do zobaczenia! 👋{Kolor.RESET}", 0.04)
+            break
 
         input(f"  {Kolor.DIM}Naciśnij ENTER aby kontynuować...{Kolor.RESET}")
 
